@@ -16,7 +16,10 @@ echo "Starting socksvpnproxy"
 docker run -d -P --name socksvpn --privileged socksvpn
 echo ""
 DPORT=$(docker port socksvpn 22 |cut -d':' -f2)
+
+sudo lsof -i -P -n | grep "8181 (LISTEN)"
+
 echo "Docker socksvpn ssh running on port $DPORT"
-echo "Creating local socks proxy to 127.0.0.1:8181"
+echo "Creating local socks proxy to *:8181"
 echo ""
-sshpass -proot ssh -p $DPORT -oStrictHostKeyChecking=no -N -D8181 root@127.0.0.1
+sshpass -proot ssh -p $DPORT -oStrictHostKeyChecking=no -N -M -D*:8181 root@127.0.0.1
